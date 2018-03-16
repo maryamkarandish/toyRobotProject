@@ -1,26 +1,35 @@
 package com.toy.command;
 
 import com.toy.board.Robot;
-import com.toy.command.impl.LeftCommand;
-import com.toy.command.impl.MoveCommand;
+import com.toy.board.Table;
+import com.toy.command.impl.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by m.karandish on 3/15/18.
+ * Created on 3/15/18.
  */
 public class CommandInvoker {
     private List<Command> commandList;
 
-    private void initialize()
-    {
+
+    private void initialize() {
         this.commandList = new ArrayList<Command>();
         this.commandList.add(new MoveCommand());
         this.commandList.add(new LeftCommand());
+        this.commandList.add(new RightCommand());
+        this.commandList.add(new ReportCommand());
+        this.commandList.add(new PlaceCommand());
     }
 
-    private Command getCommand(String action) throws Exception {
+    /**
+     * @param action
+     * @return
+     * @throws Exception
+     */
+    private Command getCommand(String action)
+            throws Exception {
         if (this.commandList == null)
             this.initialize();
 
@@ -33,23 +42,19 @@ public class CommandInvoker {
         throw new Exception("This command is not valid");
     }
 
-    public void execute(String command, Robot robot) {
+    /**
+     * @param command
+     * @param robot
+     * @param table
+     */
+    public void execute(String command, Robot robot, Table table) {
         try {
-            this.getCommand(command).execute(robot);
+            String[] cmd = command.split(" ");
+            this.getCommand(cmd[0]).execute(robot, table, cmd);
+
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
     }
 
-//    public void takeActions(Command action){
-//        actionList.add(action);
-//    }
-//
-//    public void placeAction(){
-//        for (Command action : actionList) {
-//            action.execute();
-//        }
-//
-//        actionList.clear();
-//    }
 }
